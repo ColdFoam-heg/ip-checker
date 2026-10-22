@@ -17,8 +17,8 @@ targets:
       path: Sources/Info.plist
       properties:
         CFBundleDisplayName: "IP体检"
-        CFBundleShortVersionString: "1.0.0"
-        CFBundleVersion: "1"
+        CFBundleShortVersionString: "1.1.0"
+        CFBundleVersion: "2"
         NSHumanReadableCopyright: "© 2026 LengMo"
         UILaunchScreen: {}
         UISupportedInterfaceOrientations:
