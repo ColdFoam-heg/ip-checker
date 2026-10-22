@@ -428,7 +428,7 @@ items.append(ScoreItem(reason: "家宽 + 低风险 + 无代理标记，保底按
 }
 score = max(3, min(100, score))
 rep.score = score
-rep.verdict = score >= 85? "纯净": (score >= 70? "良好": (score >= 50? "一般，有风险": "风险高，不建议用"))
+rep.verdict = score >= 85 ? "纯净" : (score >= 70 ? "良好" : (score >= 50 ? "一般，有风险" : "风险高，不建议用"))
 rep.items = items
 rep.checkedAt = Date()
 self.report = rep
@@ -441,21 +441,21 @@ func makeReportText(_ r: IPReport) -> String {
 let f = DateFormatter()
 f.dateFormat = "yyyy-MM-dd HH:mm"
 var lines: [String] = []
-lines.append("\(f.string(from: r.checkedAt))")
-lines.append("出口 IP：\(r.ip)\(r.ipVersion.isEmpty? "": "（\(r.ipVersion)）")")
+lines.append("【IP 体检报告】\(f.string(from: r.checkedAt))")
+lines.append("出口 IP：\(r.ip)\(r.ipVersion.isEmpty ? "" : "（\(r.ipVersion)）")")
 lines.append("位置：\(r.flagEmoji) \(r.countryName) \(r.region) \(r.city)")
-lines.append("运营商：\(r.isp.isEmpty? "未知": r.isp)")
-lines.append("组织 / ASN：\(r.org.isEmpty? "未知": r.org) / \(r.asn.isEmpty? "未知": r.asn)")
+lines.append("运营商：\(r.isp.isEmpty ? "未知" : r.isp)")
+lines.append("组织 / ASN：\(r.org.isEmpty ? "未知" : r.org) / \(r.asn.isEmpty ? "未知" : r.asn)")
 lines.append("IP 类型：\(r.kind.rawValue)")
 if let b = r.isBroadcast {
-lines.append(b? "原生 / 广播：疑似广播 IP": "原生 / 广播：原生 IP（各库定位一致）")
+lines.append(b ? "原生 / 广播：疑似广播 IP" : "原生 / 广播：原生 IP（各库定位一致）")
 }
 if let risk = r.riskScore { lines.append("风险分：\(risk)/100（越低越好）")}
 lines.append("纯净度：\(r.score) 分 — \(r.verdict)")
 if !r.items.isEmpty {
 lines.append("评分明细：")
 for it in r.items {
-lines.append(" · \(it.reason)\(it.delta < 0? "（\(it.delta)）": "")")
+lines.append(" · \(it.reason)\(it.delta < 0 ? "（\(it.delta)）" : "")")
 }
 }
 lines.append("— 由「IP 体检」生成（开发者 LengMo）")
