@@ -224,7 +224,7 @@ final class IPChecker: ObservableObject {
 @Published var progressText = ""
 
 func run() async {
-guard!isRunning else { return}
+guard !isRunning else { return}
 isRunning = true
 progressText = "正在查询出口 IP…"
 defer { isRunning = false}
@@ -261,22 +261,22 @@ if parts[0] == "ip" { cfIP = String(parts[1])}
 if parts[0] == "loc" { cfLoc = String(parts[1])}
 }
 }
-setSrc(0, cfIP!= nil)
+setSrc(0, cfIP != nil)
 } else { setSrc(0, false)}
 
 // ipwho.is
 var whoIP: String? = nil
-if let w = ipwho, jBool(w, "success")!= false, let ip = jStr(w, "ip") {
+if let w = ipwho, jBool(w, "success") != false, let ip = jStr(w, "ip") {
 whoIP = ip
-rep.countryName = jStr(w, "country")?? rep.countryName
-rep.countryCode = jStr(w, "country_code")?? rep.countryCode
-rep.region = jStr(w, "region")?? rep.region
-rep.city = jStr(w, "city")?? rep.city
-rep.ipVersion = jStr(w, "type")?? ""
-if let flag = w["flag"] as? [String: Any] { rep.flagEmoji = jStr(flag, "emoji")?? ""}
+rep.countryName = jStr(w, "country") ?? rep.countryName
+rep.countryCode = jStr(w, "country_code") ?? rep.countryCode
+rep.region = jStr(w, "region") ?? rep.region
+rep.city = jStr(w, "city") ?? rep.city
+rep.ipVersion = jStr(w, "type") ?? ""
+if let flag = w["flag"] as? [String: Any] { rep.flagEmoji = jStr(flag, "emoji") ?? ""}
 if let conn = w["connection"] as? [String: Any] {
-rep.isp = jStr(conn, "isp")?? rep.isp
-rep.org = jStr(conn, "org")?? rep.org
+rep.isp = jStr(conn, "isp") ?? rep.isp
+rep.org = jStr(conn, "org") ?? rep.org
 if let asn = jInt(conn, "asn") { rep.asn = "AS\(asn)"}
 }
 setSrc(1, true)
@@ -287,21 +287,21 @@ var apiHosting = false, apiProxy = false, apiMobile = false
 var apiIP: String? = nil
 if let a = ipapiCom, jStr(a, "status") == "success" {
 apiIP = jStr(a, "query")
-if rep.countryName.isEmpty { rep.countryName = jStr(a, "country")?? ""}
-if rep.countryCode.isEmpty { rep.countryCode = jStr(a, "countryCode")?? ""}
-if rep.region.isEmpty { rep.region = jStr(a, "regionName")?? ""}
-if rep.city.isEmpty { rep.city = jStr(a, "city")?? ""}
-if rep.isp.isEmpty { rep.isp = jStr(a, "isp")?? ""}
-if rep.org.isEmpty { rep.org = jStr(a, "org")?? ""}
-if rep.asn.isEmpty { rep.asn = jStr(a, "as")?? ""}
-apiHosting = jBool(a, "hosting")?? false
-apiProxy = jBool(a, "proxy")?? false
-apiMobile = jBool(a, "mobile")?? false
+if rep.countryName.isEmpty { rep.countryName = jStr(a, "country") ?? ""}
+if rep.countryCode.isEmpty { rep.countryCode = jStr(a, "countryCode") ?? ""}
+if rep.region.isEmpty { rep.region = jStr(a, "regionName") ?? ""}
+if rep.city.isEmpty { rep.city = jStr(a, "city") ?? ""}
+if rep.isp.isEmpty { rep.isp = jStr(a, "isp") ?? ""}
+if rep.org.isEmpty { rep.org = jStr(a, "org") ?? ""}
+if rep.asn.isEmpty { rep.asn = jStr(a, "as") ?? ""}
+apiHosting = jBool(a, "hosting") ?? false
+apiProxy = jBool(a, "proxy") ?? false
+apiMobile = jBool(a, "mobile") ?? false
 setSrc(2, true)
 } else { setSrc(2, false)}
 
-rep.ip = whoIP?? cfIP?? apiIP?? ""
-guard!rep.ip.isEmpty else {
+rep.ip = whoIP ?? cfIP ?? apiIP ?? ""
+guard !rep.ip.isEmpty else {
 rep.verdict = "查询失败"
 rep.items = [ScoreItem(reason: "所有数据源都没响应 — 先确认手机能上网（或当前节点没挂掉），再点重新检测", delta: 0)]
 self.report = rep
@@ -324,33 +324,33 @@ if let pc = pc, jStr(pc, "status") == "ok", let entry = pc[ip] as? [String: Any]
 pcType = jStr(entry, "type")
 pcProxy = (jStr(entry, "proxy") == "yes")
 rep.riskScore = jInt(entry, "risk")
-if rep.org.isEmpty { rep.org = jStr(entry, "organisation")?? ""}
-if rep.isp.isEmpty { rep.isp = jStr(entry, "provider")?? ""}
+if rep.org.isEmpty { rep.org = jStr(entry, "organisation") ?? ""}
+if rep.isp.isEmpty { rep.isp = jStr(entry, "provider") ?? ""}
 if rep.asn.isEmpty, let asn = jStr(entry, "asn") { rep.asn = asn}
 setSrc(3, true)
 } else { setSrc(3, false)}
 
 var coCode: String? = nil
-if let co = co, jBool(co, "error")!= true {
+if let co = co, jBool(co, "error") != true {
 coCode = jStr(co, "country_code")
-if rep.countryName.isEmpty { rep.countryName = jStr(co, "country_name")?? ""}
-if rep.org.isEmpty { rep.org = jStr(co, "org")?? ""}
-if rep.asn.isEmpty { rep.asn = jStr(co, "asn")?? ""}
-setSrc(4, coCode!= nil)
+if rep.countryName.isEmpty { rep.countryName = jStr(co, "country_name") ?? ""}
+if rep.org.isEmpty { rep.org = jStr(co, "org") ?? ""}
+if rep.asn.isEmpty { rep.asn = jStr(co, "asn") ?? ""}
+setSrc(4, coCode != nil)
 } else { setSrc(4, false)}
 
 var sbCode: String? = nil
 if let sb = sb {
 sbCode = jStr(sb, "country_code")
-if rep.countryName.isEmpty { rep.countryName = jStr(sb, "country")?? ""}
-if rep.org.isEmpty { rep.org = jStr(sb, "organization")?? jStr(sb, "isp")?? ""}
-setSrc(5, sbCode!= nil)
+if rep.countryName.isEmpty { rep.countryName = jStr(sb, "country") ?? ""}
+if rep.org.isEmpty { rep.org = jStr(sb, "organization") ?? jStr(sb, "isp") ?? ""}
+setSrc(5, sbCode != nil)
 } else { setSrc(5, false)}
 
 // MARK: 广播 IP 判定 — 各家地理库给出的国家是否一致
 var codes: [String] = []
 if let c = cfLoc,!c.isEmpty { codes.append(c)}
-if!rep.countryCode.isEmpty { codes.append(rep.countryCode)}
+if !rep.countryCode.isEmpty { codes.append(rep.countryCode)}
 if let a = ipapiCom, let cc = jStr(a, "countryCode") { codes.append(cc)}
 if let c = coCode { codes.append(c)}
 if let c = sbCode { codes.append(c)}
@@ -370,27 +370,27 @@ rep.broadcastNote = "定位数据不足，暂时判断不了原生 / 广播"
 }
 
 // MARK: IP 类型判定
-var kind: IPKind =.unknown
+var kind: IPKind = .unknown
 var kindNote = ""
-let typeLow = (pcType?? "").lowercased()
+let typeLow = (pcType ?? "").lowercased()
 if typeLow.contains("tor") {
-kind =.tor; kindNote = "风险数据库明确标记为 Tor 出口节点"
+kind = .tor; kindNote = "风险数据库明确标记为 Tor 出口节点"
 } else if typeLow.contains("residential") || typeLow.contains("wireless") {
-kind =.residential; kindNote = "风险数据库标记为住宅 / 家庭宽带类 IP"
+kind = .residential; kindNote = "风险数据库标记为住宅 / 家庭宽带类 IP"
 } else if typeLow.contains("hosting") || typeLow.contains("datacenter") || typeLow.contains("data center") {
-kind =.datacenter; kindNote = "风险数据库标记为机房 / 托管 IP"
+kind = .datacenter; kindNote = "风险数据库标记为机房 / 托管 IP"
 } else if typeLow.contains("vpn") || typeLow.contains("proxy") {
-kind =.vpn; kindNote = "风险数据库标记为 VPN / 代理出口"
+kind = .vpn; kindNote = "风险数据库标记为 VPN / 代理出口"
 } else if typeLow.contains("business") {
-kind =.business; kindNote = "风险数据库标记为企业级线路"
+kind = .business; kindNote = "风险数据库标记为企业级线路"
 } else if apiHosting {
-kind =.datacenter; kindNote = "ip-api 标记 hosting=true（托管机房）"
+kind = .datacenter; kindNote = "ip-api 标记 hosting=true（托管机房）"
 } else if looksLikeHosting([rep.org, rep.isp, rep.asn]) {
-kind =.datacenter; kindNote = "运营商 / 组织名命中已知云厂商与机房关键词"
+kind = .datacenter; kindNote = "运营商 / 组织名命中已知云厂商与机房关键词"
 } else if apiMobile {
-kind =.residential; kindNote = "移动运营商出口（ip-api 标记 mobile=true），按家宽类看待"
-} else if!rep.isp.isEmpty ||!rep.org.isEmpty {
-kind =.residential; kindNote = "运营商是普通 ISP 且无任何机房 / 代理标记，按家宽推测"
+kind = .residential; kindNote = "移动运营商出口（ip-api 标记 mobile=true），按家宽类看待"
+} else if !rep.isp.isEmpty || !rep.org.isEmpty {
+kind = .residential; kindNote = "运营商是普通 ISP 且无任何机房 / 代理标记，按家宽推测"
 }
 rep.kind = kind
 rep.kindNote = kindNote
@@ -413,16 +413,16 @@ if let risk = rep.riskScore, risk > 0 {
 let d = Int((Double(risk) * 0.35).rounded())
 if d > 0 { deduct("风险数据库给出 \(risk)/100 的风险分", d)}
 }
-if pcProxy && kind!=.vpn && kind!=.tor {
+if pcProxy && kind != .vpn && kind != .tor {
 deduct("风险数据库确认这个 IP 被用作代理", 10)
 }
-if apiProxy &&!pcProxy && kind!=.vpn && kind!=.tor {
+if apiProxy && !pcProxy && kind != .vpn && kind != .tor {
 deduct("ip-api 标记这个 IP 是代理出口", 10)
 }
 if rep.isBroadcast == true {
 deduct("疑似广播 IP — 注册地与使用地不一致，部分平台会因此拦截或定位错乱", 8)
 }
-if kind ==.residential, (rep.riskScore?? 0) <= 15,!pcProxy,!apiProxy {
+if kind == .residential, (rep.riskScore ?? 0) <= 15,!pcProxy,!apiProxy {
 score = max(score, 92)
 items.append(ScoreItem(reason: "家宽 + 低风险 + 无代理标记，保底按纯净档计", delta: 0))
 }
@@ -452,7 +452,7 @@ lines.append(b? "原生 / 广播：疑似广播 IP": "原生 / 广播：原生 I
 }
 if let risk = r.riskScore { lines.append("风险分：\(risk)/100（越低越好）")}
 lines.append("纯净度：\(r.score) 分 — \(r.verdict)")
-if!r.items.isEmpty {
+if !r.items.isEmpty {
 lines.append("评分明细：")
 for it in r.items {
 lines.append(" · \(it.reason)\(it.delta < 0? "（\(it.delta)）": "")")
