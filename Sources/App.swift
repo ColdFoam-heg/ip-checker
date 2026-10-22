@@ -450,7 +450,7 @@ rep.kindNote = "出口落在云厂商 / 机房网段（\(rep.isp.isEmpty ? "运�
 } else if apiMobile == true {
 rep.kind = .residential
 rep.kindNote = "移动网络出口（手机流量网段），可信度通常不错"
-} else if whoIsISP || (resHit &&!hostingHit) {
+} else if whoIsISP || (resHit && !hostingHit) {
 rep.kind = .residential
 rep.kindNote = "运营商信息像正经家庭宽带，这是最干净的一类出口"
 } else if whoIsCorp {
@@ -468,7 +468,7 @@ rep.isBroadcast = true
 rep.broadcastNote = "多个数据库给出的定位国家不一致（\(rep.countryCodesSeen.joined(separator: "、"))），这个 IP 的注册地和实际出口地对不上，属于疑似广播 / Anycast IP"
 } else if rep.countryCodesSeen.count == 1 {
 rep.isBroadcast = false
-rep.broadcastNote = "各个数据库定位一致（\(rep.countryName.isEmpty? rep.countryCode: rep.countryName)），是当地原生 IP"
+rep.broadcastNote = "各个数据库定位一致（\(rep.countryName.isEmpty ? rep.countryCode : rep.countryName)），是当地原生 IP"
 } else {
 rep.isBroadcast = nil
 rep.broadcastNote = "没有足够数据判断原生 / 广播"
