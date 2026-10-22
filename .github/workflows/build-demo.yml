@@ -46,7 +46,7 @@ jobs:
 
       - name: 5. 注入：dylib 放进 .app + LIEF 给主程序加加载命令
         run: |
-          pip3 install --quiet lief
+          pip3 install --quiet --break-system-packages lief
           APP=build/Build/Products/Release-iphoneos/IPChecker.app
           mkdir -p "$APP/Frameworks"
           cp LengMoDemo.dylib "$APP/Frameworks/"
