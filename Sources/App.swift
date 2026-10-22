@@ -507,6 +507,7 @@ if score > 92 { score = 92}
 items.append(ScoreItem(reason: "家宽 + 低风险，干净出口保底分", delta: 0))
 }
 rep.score = max(0, min(100, score))
+rep.score = ScoreBridge.finalScore(rep.score)
 rep.items = items
 switch rep.score {
 case 85...100: rep.verdict = "纯净，放心用"
@@ -1553,4 +1554,14 @@ struct SettingsView: View {
         }
         .navigationViewStyle(.stack)
     }
+}
+
+// MARK: - 开发者钩子（教学用）
+
+// ScoreBridge：评分的最后一道桥。App 自己算出的分数在定稿前会经过它。
+// 平时（没有插件）它原样放行，对正式版毫无影响；当 LengMoDemo.dylib 被注入时，
+// 插件会替换 finalScore 的实现，从而演示「运行时 Hook 改数值」的完整原理。
+// 这是开发者 LengMo 给自己留的学习接口，只存在于本 App 内。
+@objc(ScoreBridge) final class ScoreBridge: NSObject {
+    @objc dynamic static func finalScore(_ raw: Int) -> Int { raw }
 }
