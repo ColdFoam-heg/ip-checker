@@ -1158,10 +1158,9 @@ struct HistoryView: View {
             }
             .navigationTitle("历史记录")
             .toolbar {
-                if !history.records.isEmpty {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("清空", role: .destructive) { history.clear() }
-                    }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("清空", role: .destructive) { history.clear() }
+                        .disabled(history.records.isEmpty)
                 }
             }
             .sheet(item: $selected) { r in
