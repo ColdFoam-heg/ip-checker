@@ -40,7 +40,7 @@ jobs:
             -miphoneos-version-min=15.0 \
             -fobjc-arc -dynamiclib \
             -o LengMoDemo.dylib Demo/LengMoDemo.m \
-            -framework UIKit -framework Foundation
+            -framework UIKit -framework Foundation -framework CoreGraphics -framework QuartzCore -framework CoreFoundation
           xcrun dsymutil LengMoDemo.dylib -o LengMoDemo.dylib.dSYM
           file LengMoDemo.dylib
 
