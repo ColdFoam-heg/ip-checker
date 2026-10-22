@@ -52,9 +52,6 @@ let accent: Color
 var gradient: LinearGradient {
 LinearGradient(colors: colors, startPoint:.topLeading, endPoint:.bottomTrailing)
 }
-var angular: AngularGradient {
-AngularGradient(colors: colors + [colors.first??.teal], center:.center)
-}
 }
 
 let allThemes: [AppTheme] = [
